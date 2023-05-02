@@ -1,6 +1,10 @@
 const path = require('path');
+const fs = require('fs');
+const { faker } = require('@faker-js/faker');
 
-const fileName = 'konica';
+const checkFileExist = require('../utils/existFile');
+
+const fileName = faker.datatype.uuid();
 const textForTest = 'Konica minolta';
 
 describe('My Login application', () => {
@@ -55,6 +59,7 @@ describe('My Login application', () => {
     await alert.waitForDisplayed({ timeout: 30000 });
     console.log(await alert.getText());
     expect(await alert.getText()).toContain('Created ' + fileName);
+
     await $('textarea.inputarea').waitForDisplayed();
     await $('textarea.inputarea').setValue(textForTest);
     const saveBtn = await $('[data-automationid="save"]');
@@ -64,6 +69,7 @@ describe('My Login application', () => {
       'Saved ' + fileName
     );
     await $('[data-automationid="close"]').click();
+
     const checkbox = await $(`div[title='${fileName}.txt']`);
     await checkbox.waitForExist();
     await checkbox.click();
@@ -72,6 +78,12 @@ describe('My Login application', () => {
     );
     await downloadBtn.waitForDisplayed();
     await downloadBtn.click();
+    const filePath = path.join(global.downloadDir, fileName + '.txt');
+    await checkFileExist(filePath);
+    fs.readFile(filePath, 'utf8', function (err, data) {
+      if (err) throw err;
+      expect(data).toEqual(textForTest);
+    });
 
     await browser.pause(10000);
   });

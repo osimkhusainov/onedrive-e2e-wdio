@@ -1,3 +1,10 @@
+const path = require('path');
+const fs = require('fs');
+const rmdir = require('./test/utils/rmdir');
+
+// Store the directory path in a global, which allows us to access this path inside our tests
+global.downloadDir = path.join(__dirname, 'tempDownload');
+
 export const config = {
   //
   // ====================
@@ -57,6 +64,13 @@ export const config = {
       maxInstances: 5,
       //
       browserName: 'chrome',
+      'goog:chromeOptions': {
+        prefs: {
+          directory_upgrade: true,
+          prompt_for_download: false,
+          'download.default_directory': downloadDir,
+        },
+      },
       acceptInsecureCerts: true,
       // If outputDir is provided WebdriverIO can capture driver session logs
       // it is possible to configure which logTypes to include/exclude.
@@ -155,8 +169,13 @@ export const config = {
    * @param {object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {
-  // },
+  onPrepare: function (config, capabilities) {
+    // make sure download directory exists
+    if (!fs.existsSync(downloadDir)) {
+      // if it doesn't exist, create it
+      fs.mkdirSync(downloadDir);
+    }
+  },
   /**
    * Gets executed before a worker process is spawned and can be used to initialise specific service
    * for that worker as well as modify runtime environments in an async fashion.
@@ -279,8 +298,9 @@ export const config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {<Object>} results object containing test results
    */
-  // onComplete: function(exitCode, config, capabilities, results) {
-  // },
+  onComplete: function () {
+    rmdir(downloadDir);
+  },
   /**
    * Gets executed when a refresh happens.
    * @param {string} oldSessionId session ID of the old session

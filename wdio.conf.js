@@ -3,7 +3,7 @@ const fs = require('fs');
 const rmdir = require('./test/utils/rmdir');
 
 // Store the directory path in a global, which allows us to access this path inside our tests
-global.downloadDir = path.join(__dirname, 'tempDownload');
+global.downloadDir = path.join(__dirname, 'download');
 
 export const config = {
   //

@@ -2,7 +2,7 @@
 ## Instruction how to run tests 
 ### Prior running commands in an Code editor's terminal follow the steps below:
 1. Install `VS Code` - https://code.visualstudio.com/download
-2. Install `Nod`e via `nvm` - https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
+2. Install `Node` via `nvm` - https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
 3. Install `Java` (instruction for windows) - https://stackoverflow.com/a/67526703
 
 ### Steps to run tests from a terminal

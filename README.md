@@ -17,8 +17,14 @@ Test spec file is in `test/specs/`
 Page object models are in `test/pageobjects/`
 Helper functions are in `test/utils/`
 
+### Helpful resources:
+Faker.js - https://www.npmjs.com/package/@faker-js/faker
 
-## Screenshot 
+Allure reporter - https://webdriver.io/docs/allure-reporter/
+
+Explicit waitings - https://webdriver.io/docs/autowait/
+
+## Screenshots 
 ### Allure report 
 
 ![Allure report1](https://user-images.githubusercontent.com/57813114/236262842-416d7427-5a82-4e01-9212-b68e77423c8b.png)
@@ -28,7 +34,7 @@ Helper functions are in `test/utils/`
 
 ![passed tests in VSCode terminal](https://user-images.githubusercontent.com/57813114/236262964-85f221cf-c00c-4368-a99a-9634c81cedde.png)
 
-## Video
+## Videos
 
 
 https://user-images.githubusercontent.com/57813114/236263658-b92c023c-947c-4cfa-addf-31168199c942.mp4

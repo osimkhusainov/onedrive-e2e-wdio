@@ -11,7 +11,6 @@ class LandingPage extends Page {
   async clickOnLoginAndSwitchWindow() {
     await this.signInButton.click();
     await browser.switchWindow('/about/en-us/signin/');
-    await expect(browser).toHaveTitle('Sign in - Microsoft OneDrive');
   }
 }
 

@@ -91,6 +91,11 @@ class LoginPage extends Page {
       await this.cancelLink.click();
     }
   }
+
+  async clickOnYesButton() {
+    await this.yesButton.waitForDisplayed();
+    await this.yesButton.click();
+  }
 }
 
 module.exports = new LoginPage();

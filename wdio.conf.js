@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const rmdir = require('./test/utils/rmdir');
+const report = require('@wdio/allure-reporter');
 
 // Store the directory path in a global, which allows us to access this path inside our tests
 global.downloadDir = path.join(__dirname, 'download');
@@ -147,7 +148,18 @@ export const config = {
   // Test reporter for stdout.
   // The only one supported by default is 'dot'
   // see also: https://webdriver.io/docs/dot-reporter
-  reporters: ['spec'],
+  reporters: [
+    'spec',
+    [
+      'allure',
+      {
+        outputDir: 'allure-results',
+        disableWebdriverStepsReporting: true,
+        disableWebdriverScreenshotsReporting: false,
+        disableMochaHooks: true,
+      },
+    ],
+  ],
 
   //
   // Options to be passed to Mocha.
@@ -170,6 +182,11 @@ export const config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    */
   onPrepare: function (config, capabilities) {
+    let allureResults = path.join(__dirname, 'allure-results');
+    if (fs.existsSync(allureResults)) {
+      rmdir(allureResults);
+    }
+
     // make sure download directory exists
     if (!fs.existsSync(downloadDir)) {
       // if it doesn't exist, create it
@@ -255,9 +272,13 @@ export const config = {
    * @param {boolean} result.passed    true if test has passed, otherwise false
    * @param {object}  result.retries   informations to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
    */
-  // afterTest: function(test, context, { error, result, duration, passed, retries }) {
-  // },
 
+  afterTest: async function (test, context, { error }) {
+    report.addEnvironment('BROWSER_NAME', driver.capabilities.browserName);
+    if (error) {
+      await browser.takeScreenshot();
+    }
+  },
   /**
    * Hook that gets executed after the suite has ended
    * @param {object} suite suite details

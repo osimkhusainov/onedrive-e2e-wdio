@@ -42,11 +42,11 @@ class MyFilesPage extends Page {
   }
 
   get downloadButton() {
-    return $('[data-automation-id="visibleContent"] button[name="Download"]');
+    return $('button[name="Download"]');
   }
 
   get deleteButton() {
-    return $('[data-automation-id="visibleContent"] button[name="Delete"]');
+    return $('button[name="Delete"]');
   }
 
   get confirmButton() {
@@ -55,6 +55,10 @@ class MyFilesPage extends Page {
 
   get successfullDeleteAlert() {
     return $('div*=Deleted');
+  }
+
+  get iconMore() {
+    return $('i[data-icon-name="More"]');
   }
 
   async checkboxForCreatedFile(fileName) {
@@ -67,9 +71,12 @@ class MyFilesPage extends Page {
     );
   }
 
-  async checkSuccesfullDeleteMessage() {
+  async checkSuccesfullDeleteMessage(count) {
+    await this.successfullDeleteAlert.waitForDisplayed({
+      timeout: 15000,
+    });
     await expect(await this.successfullDeleteAlert.getText()).toContain(
-      'Deleted 1 item'
+      `Deleted ${count} ${count > 1 ? 'items' : 'item'}`
     );
   }
 
@@ -90,10 +97,44 @@ class MyFilesPage extends Page {
     await expect(await alert.getText()).toContain('Created ' + fileName);
   }
 
-  async clickOnLoginAndSwitchWindow() {
-    await this.signInButton.click();
-    await browser.switchWindow('/about/en-us/signin/');
-    await expect(browser).toHaveTitle('Sign in - Microsoft OneDrive');
+  async clickOnDeleteButton() {
+    if (!(await this.deleteButton.isDisplayed())) {
+      await this.iconMore.waitForDisplayed();
+      await this.iconMore.click();
+    }
+    await this.deleteButton.waitForDisplayed();
+    await this.deleteButton.click();
+  }
+
+  async clickOnNewButton() {
+    await this.newButton.waitForDisplayed();
+    await this.newButton.click();
+  }
+
+  async addTextToFile(text) {
+    await this.textarea.waitForDisplayed();
+    await this.textarea.setValue(text);
+  }
+
+  async clickOnSaveButton() {
+    await this.saveButton.waitForDisplayed();
+    await this.saveButton.click();
+  }
+
+  async clickOnDownloadButton() {
+    await this.downloadButton.waitForDisplayed();
+    await this.downloadButton.click();
+  }
+
+  async clickOnConfirmButton() {
+    await this.confirmButton.waitForDisplayed();
+    await this.confirmButton.click();
+  }
+
+  async clickOnCheckboxWithName(name) {
+    const checkbox = await this.checkboxForCreatedFile(name);
+    await checkbox.waitForExist();
+    await checkbox.click();
   }
 }
 
